@@ -5,8 +5,14 @@ import threading
 
 inicioPuente = 10
 largoPuente = 20
-semaforoPuente = threading.Semaphore(1)
-
+inicioPuente2= 35
+largoPuente2=50
+print("ingrese su cantidad de vacas pasen al mismo tiempo")
+x=int(input())
+print("ingrese su cantidad de vacas pasen al mismo tiempo en el segundo puente")
+y=int(input())
+semaforoPuente = threading.Semaphore(x)
+semaforoPuente2= threading.Semaphore(y)
 class Vaca(threading.Thread):
   def __init__(self):
     super().__init__()
@@ -16,12 +22,15 @@ class Vaca(threading.Thread):
   def avanzar(self):
     if (self.posicion == inicioPuente - 1):
       semaforoPuente.acquire()#esto congela a las vacas en una posicion anterior al puente 
-
+    if (self.posicion == inicioPuente2 - 1):
+      semaforoPuente2.acquire()
     time.sleep(self.velocidad)
     self.posicion += 1
 
     if (self.posicion == inicioPuente + largoPuente):
       semaforoPuente.release()
+    if (self.posicion == inicioPuente2 + largoPuente2):
+      semaforoPuente2.release()
 
   def dibujar(self):
     print(' ' * self.posicion + "v")
@@ -31,7 +40,9 @@ class Vaca(threading.Thread):
       self.avanzar()
 
 vacas = []
-for i in range(5):
+print("ingrese su cantidad de vacas")
+n=int(input())
+for i in range(n):
   v = Vaca()
   vacas.append(v)
   v.start()
@@ -41,6 +52,7 @@ def cls():
 
 def dibujarPuente():
   print(' ' * inicioPuente + '=' * largoPuente)
+  print(' ' * inicioPuente2 + '=' * largoPuente2)
 
 while(True):
   cls()
@@ -51,3 +63,4 @@ while(True):
     v.dibujar()
   dibujarPuente()
   time.sleep(0.2)
+  
